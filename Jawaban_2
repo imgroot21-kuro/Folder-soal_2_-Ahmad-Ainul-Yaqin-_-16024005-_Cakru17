@@ -1,0 +1,76 @@
+import random
+
+class Robot:
+    def __init__(self, name, health, attack_power):
+        self.name = name
+        self.health = health
+        self.attack_power = attack_power
+
+    def is_alive(self):
+        return self.health > 0
+
+    def attack(self, other_robot):
+        damage = random.randint(0, self.attack_power)
+        other_robot.health -= damage
+        return damage
+
+    def __str__(self):
+        return f"{self.name} (Darah: {self.health}, Kekuatan Serangan: {self.attack_power})"
+
+class Battle:
+    @staticmethod
+    def start_fight(robot1, robot2):
+        print(f"Duel antara {robot1.name} dan {robot2.name} dimulai!")
+        while robot1.is_alive() and robot2.is_alive():
+            damage_to_robot2 = robot1.attack(robot2)
+            print(f"{robot1.name} menyerang {robot2.name} sebanyak {damage_to_robot2} darah!")
+            if not robot2.is_alive():
+                print(f"Yeee {robot1.name} menang nihh!")
+                print(f"{robot2.name} kalah coyyy!")
+                break
+            
+            damage_to_robot1 = robot2.attack(robot1)
+            print(f"{robot2.name} menyerang {robot1.name} sebanyak {damage_to_robot1} darah!")
+            if not robot1.is_alive():
+                print(f"Yeee {robot2.name} menang nihh!")
+                print(f"Woloooo {robot1.name} kalah coyyy!")
+                break
+
+class Game:
+    def __init__(self):
+        self.robots = []
+
+    def add_robot(self, robot):
+        self.robots.append(robot)
+
+    def start_game(self):
+        print("Pilih dua robot yang mau kamu duelin:")
+        for index, robot in enumerate(self.robots):
+            print(f"{index + 1}. {robot}")
+        
+        choice1 = int(input("Pilih robot pertama (masukin nomor robotnya): ")) - 1
+        choice2 = int(input("Pilih robot kedua (masukin nomor robotnya): ")) - 1
+
+        if choice1 < 0 or choice1 >= len(self.robots) or choice2 < 0 or choice2 >= len(self.robots) or choice1 == choice2:
+            print("Pilihanmu tidak logis. Coba pilih robot sesuai dengan nomor yang ada di atas!.")
+            return
+
+        Battle.start_fight(self.robots[choice1], self.robots[choice2])
+
+# Main program
+if __name__ == "__main__":
+    game = Game()
+
+    # Adding robots to the game
+    robot1 = Robot("Kurobot", 100, 30)
+    robot2 = Robot("Groot-Bot", 100, 25)
+    robot3 = Robot("BayMax", 120, 20)
+    robot4 = Robot("TheHunter90X", 80, 35)
+
+    game.add_robot(robot1)
+    game.add_robot(robot2)
+    game.add_robot(robot3)
+    game.add_robot(robot4)
+
+    # Start the game
+    game.start_game()
